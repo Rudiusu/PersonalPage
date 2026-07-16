@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陈达 - 前端开发工程师</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #5b9bd5;
+  --primary-light: #d6eaf8;
+  --primary-dark: #2e75b6;
+  --bg: #f0f7ff;
+  --text: #2c3e50;
+  --text-light: #5a6a7a;
+  --card-bg: #ffffff;
+  --shadow: 0 8px 32px rgba(91,155,213,0.12);
+}
+body {
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+a { color: var(--primary); text-decoration: none; }
+
+/* Scroll animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.slide-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.slide-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.slide-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.slide-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Header / Hero */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #d6eaf8 0%, #aed6f1 30%, #85c1e9 70%, #5b9bd5 100%);
+  overflow: hidden;
+}
+.hero-pircles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-circles .circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px;
+  animation: heroIn 1s ease forwards;
+}
+@keyframes heroIn {
+  from { opacity: 0; transform: scale(0.9) translateY(30px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.hero-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 56px;
+  color: #fff;
+  box-shadow: 0 8px 40px rgba(46,117,182,0.35);
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 8px 40px rgba(46,117,182,0.35); }
+  50%      { box-shadow: 0 8px 60px rgba(46,117,182,0.55); }
+}
+.hero-name {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-size: 1.3rem;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 20px;
+}
+.hero-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.hero-info span {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  padding: 6px 18px;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: background 0.3s, transform 0.3s;
+}
+.hero-info span:hover {
+  background: rgba(255,255,255,0.35);
+  transform: translateY(-2px);
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+  color: rgba(255,255,255,0.8);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(12px); }
+}
+
+/* Nav */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 20px rgba(91,155,213,0.1);
+  transform: translateY(-100%);
+  transition: transform 0.4s ease;
+}
+.nav.show { transform: translateY(0); }
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+.nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--primary-dark); }
+.nav-links { display: flex; gap: 24px; }
+.nav-links a {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  position: relative;
+  transition: color 0.3s;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--primary); }
+.nav-links a:hover::after { width: 100%; }
+
+/* Sections */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+section {
+  padding: 80px 0;
+}
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+  position: relative;
+  display: inline-block;
+}
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--primary);
+  transition: width 0.5s;
+}
+.section-title.visible::after { width: 100%; }
+.section-desc {
+  color: var(--text-light);
+  margin-bottom: 40px;
+  font-size: 1.05rem;
+}
+
+/* Skills */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.skill-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(91,155,213,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: default;
+}
+.skill-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(91,155,213,0.2);
+}
+.skill-card .icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 14px;
+}
+.skill-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--primary-dark);
+}
+.skill-card p {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 48px;
+}
+.timeline-dot {
+  position: absolute;
+  left: -32px;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid var(--primary-light);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.4);
+  box-shadow: 0 0 0 6px rgba(91,155,213,0.2);
+}
+.timeline-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(91,155,213,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.timeline-card:hover {
+  transform: translateX(8px);
+  box-shadow: 0 12px 40px rgba(91,155,213,0.18);
+}
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.timeline-company {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.timeline-date {
+  font-size: 0.85rem;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 4px 14px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.timeline-role {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+.timeline-card ul {
+  padding-left: 18px;
+}
+.timeline-card li {
+  margin-bottom: 6px;
+  font-size: 0.93rem;
+  color: var(--text);
+}
+
+/* Project cards */
+.projects-grid {
+  display: grid;
+  gap: 28px;
+}
+.project-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(91,155,213,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(91,155,213,0.2);
+}
+.project-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.project-type {
+  font-size: 0.85rem;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+.project-desc {
+  font-size: 0.93rem;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+.project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.project-tech span {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 4px 14px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.3s;
+}
+.project-tech span:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+}
+.project-card ul {
+  padding-left: 18px;
+}
+.project-card li {
+  margin-bottom: 6px;
+  font-size: 0.93rem;
+  color: var(--text);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 40px 24px;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: rgba(255,255,255,0.85);
+  font-size: 0.9rem;
+}
+footer a { color: #fff; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .hero-name { font-size: 2rem; }
+  .hero-title { font-size: 1rem; }
+  .hero-info span { font-size: 0.82rem; padding: 4px 12px; }
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 0.82rem; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .timeline { padding-left: 30px; }
+  .timeline-dot { left: -24px; }
+  section { padding: 50px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">陈达</div>
+    <div class="nav-links">
+      <a href="#skills">技能</a>
+      <a href="#experience">经历</a>
+      <a href="#projects">项目</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-circles" id="circles"></div>
+  <div class="hero-content">
+    <div class="hero-avatar">陈</div>
+    <h1 class="hero-name">陈达</h1>
+    <p class="hero-title">前端开发工程师</p>
+    <div class="hero-info">
+      <span>👤 男 · 27岁</span>
+      <span>📞 13003678592</span>
+      <span>📧 1163485800@qq.com</span>
+      <span>💼 5年工作经验</span>
+      <span>🎓 全日制本科</span>
+    </div>
+  </div>
+  <div class="scroll-hint" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">▼</div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="container">
+    <h2 class="section-title fade-in">个人技能</h2>
+    <p class="section-desc fade-in">多年积累的技术栈与核心能力</p>
+    <div class="skills-grid">
+      <div class="skill-card fade-in">
+        <div class="icon">🌐</div>
+        <h3>前端核心</h3>
+        <p>熟练掌握 HTML5、CSS3、TypeScript、Vue2/Vue3 全家桶、React 18</p>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="icon">📱</div>
+        <h3>移动端 & 跨端</h3>
+        <p>熟悉移动端 H5、小程序开发，掌握 uni-app、Ionic、Flutter 等跨端框架</p>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="icon">🔧</div>
+        <h3>工程化 & DevOps</h3>
+        <p>熟悉 Git 版本管理，能使用 Nginx 路径代理及 Docker + GitLab-CE 搭建私仓</p>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="icon">🧩</div>
+        <h3>微前端 & BFF</h3>
+        <p>有微前端（qiankun）实践经验以及 BFF 层开发经验</p>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="icon">⚙️</div>
+        <h3>后端能力</h3>
+        <p>了解 Spring 全家桶、MySQL、Redis，熟悉 NestJS 开发生态</p>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="icon">🤖</div>
+        <h3>AI & 协作</h3>
+        <p>熟练使用 Claude Code 等 AI 工具，有良好的沟通能力及团队协作能力</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Work Experience -->
+<section id="experience" style="background: linear-gradient(180deg, var(--bg) 0%, #e8f2fc 100%);">
+  <div class="container">
+    <h2 class="section-title fade-in">工作经历</h2>
+    <p class="section-desc fade-in">从实践中成长，在团队中发光</p>
+    <div class="timeline">
+
+      <div class="timeline-item slide-left">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <span class="timeline-company">杭州露电数字科技集团有限公司</span>
+            <span class="timeline-date">2023.04 - 至今</span>
+          </div>
+          <div class="timeline-role">前端开发工程师</div>
+          <ul>
+            <li>负责多个 ToG 业务产线的前端技术管理与核心开发，主导技术选型、工时评估及任务拆分</li>
+            <li>管理前端团队，负责日常代码 MR 审核，制定并推行团队开发规范，保障代码质量</li>
+            <li>参与产品前期调研，与政府机构负责人沟通，评估技术可行性并敲定实施方案</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item slide-left">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <span class="timeline-company">杭州奎宇科技有限公司</span>
+            <span class="timeline-date">2022.09 - 2022.12</span>
+          </div>
+          <div class="timeline-role">前端开发工程师</div>
+          <ul>
+            <li>负责首页搭建，使用原生 JS 实现首页滚动随机展示商品视频，增加商品曝光和减少用户交互次数</li>
+            <li>开发活动页面，利用 Shopify 平台组件的低代码能力快速实现页面搭建，还原 UI 设计</li>
+            <li>制定开发规范，防止线上代码与本地代码冲突，研究反混淆工具，覆盖原组件逻辑使其符合需求</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item slide-left">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <span class="timeline-company">浙江远传信息技术股份有限公司</span>
+            <span class="timeline-date">2021.07 - 2022.08</span>
+          </div>
+          <div class="timeline-role">前端开发工程师</div>
+          <ul>
+            <li>参与公司官网的功能迭代和维护</li>
+            <li>参与对公司内部企业中心及运营中心的日常功能迭代</li>
+            <li>前端开发效率优化，针对新运营系统开发的组件体现出良好的封装性和扩展性，大大减少了前端开发工作量</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="container">
+    <h2 class="section-title fade-in">项目经历</h2>
+    <p class="section-desc fade-in">深耕业务场景，用技术驱动价值</p>
+    <div class="projects-grid">
+
+      <!-- 礼看 -->
+      <div class="project-card fade-in">
+        <div class="project-name">礼看</div>
+        <div class="project-type">微信小程序</div>
+        <p class="project-desc">一款连接医院、机构主管与护理员的微信小程序，提供为老人分配护理员、开启护理服务、服务过程全方位监控、服务后反馈等一站式服务。旨在通过数字化手段提升长护险服务的效率与质量。</p>
+        <div class="project-tech">
+          <span>uni-app</span><span>uview</span><span>Vue3</span><span>Vuex</span>
+        </div>
+        <ul>
+          <li>基于 uni-app + uview 组件库实现微信小程序的开发与发布</li>
+          <li>主导前端性能优化，通过分包加载策略降低主包体积，首屏加载速度提升；对 uview 组件库进行按需引入，优化资源加载</li>
+          <li>将高频功能（图片上传压缩、客户描述卡片）封装成可复用组件或 Composition API，统一开发规范，提升团队效率</li>
+          <li>针对大数据量列表场景，采用 z-paging 分页加载与 v-if 懒渲染结合策略，显著提升长列表滚动流畅度</li>
+        </ul>
+      </div>
+
+      <!-- 长护险运营平台 -->
+      <div class="project-card fade-in">
+        <div class="project-name">长护险小程序运营平台</div>
+        <div class="project-type">微前端架构</div>
+        <p class="project-desc">服务于"礼看"小程序的内部运营管理后台。通过架构升级，将旧版 Vue2 单体应用重构为可独立开发、独立部署的微前端应用，以支持业务快速迭代。</p>
+        <div class="project-tech">
+          <span>Monorepo (pnpm)</span><span>qiankun</span><span>Vue 3</span><span>React 18</span><span>tailwind</span>
+        </div>
+        <ul>
+          <li>搭建基于 pnpm workspace 的 Monorepo 仓库，管理 1 个 Vue2 基座应用与 2 个 Umi 微应用，实现多应用独立开发与部署</li>
+          <li>解决 Vue2 (Webpack) 与 Umi (React) 混合架构下的兼容性问题，利用 qiankun sandbox 机制隔离 JS 执行环境</li>
+          <li>配置 Umi 外部依赖，将 React、AntD-Pro 等大库从子应用中剥离，由基座统一通过 CDN 加载</li>
+          <li>设计基于 qiankun initialGlobalState 的全局状态管理方案，实现用户信息、权限标识在 Vue 基座与 React 子应用间实时同步</li>
+        </ul>
+      </div>
+
+      <!-- BFF -->
+      <div class="project-card fade-in">
+        <div class="project-name">长护险后端微服务 BFF 项目</div>
+        <div class="project-type">BFF 层</div>
+        <p class="project-desc">采用微服务架构，服务于 PC 端和小程序端。构建 BFF (Backend For Frontend) 层，作为前端与后端微服务之间的适配层，为前端提供高效、灵活的数据聚合服务。</p>
+        <div class="project-tech">
+          <span>NestJS</span><span>TypeScript</span><span>GraphQL (Apollo)</span><span>TypeORM</span><span>Redis</span>
+        </div>
+        <ul>
+          <li>基于 NestJS 构建后端服务网关，通过封装下游 REST/gRPC 接口，为前端提供统一的 GraphQL 数据出口</li>
+          <li>利用 GraphQL 声明式查询特性，解决多端字段差异导致的接口冗余问题，减少无效数据传输</li>
+          <li>利用 TypeScript 强类型特性，实现从数据库 Entity 到 GraphQL Schema 再到前端类型的全链路类型安全</li>
+        </ul>
+      </div>
+
+      <!-- 天堂声谷 -->
+      <div class="project-card fade-in">
+        <div class="project-name">天堂声谷官网</div>
+        <div class="project-type">ToB 管理平台</div>
+        <p class="project-desc">通过云众包平台提供任务接取服务，用户可在任务大厅选择采集、标注、语音、推广四类任务。采用游戏化管理模式，内置培训认证系统，并提供众包运营、云端部署、质量管控等功能。</p>
+        <div class="project-tech">
+          <span>React 16</span><span>Vue2</span><span>tailwind</span><span>TypeScript</span>
+        </div>
+        <ul>
+          <li>参与迭代版本技术可行性评审、功能需求评审、用例评审、前后端联调及冒烟测试</li>
+          <li>负责官网资质认证模块的前端开发和迭代工作，进行组件结构优化，提高代码可读性</li>
+          <li>负责企业中心流程设计相关模块的技术选型和研发，设计高可用流程节点组件</li>
+          <li>通过封装高复用性、高扩展性的业务组件，显著提升团队在新运营系统上的开发效率</li>
+        </ul>
+      </div>
+
+      <!-- 马蜂盯标 -->
+      <div class="project-card fade-in">
+        <div class="project-name">马蜂盯标</div>
+        <div class="project-type">百度小程序 + 移动端 H5</div>
+        <p class="project-desc">针对招投标行业的垂类搜索引擎，汇聚全国招投标采购资讯，全面收集采招企业信息，为用户建立竞争情报系统及信息资源，精准匹配定制信息，帮助企业发掘市场机会。</p>
+        <div class="project-tech">
+          <span>Vue2</span><span>uni-app</span><span>uview</span><span>webpack</span>
+        </div>
+        <ul>
+          <li>负责项目前端架构、技术实施、设计和逻辑编写，负责接口请求封装、路由配置、中间件注册</li>
+          <li>负责各页面的功能设计与逻辑跳转，配置页面头部 meta 便于百度爬虫抓取，解决 uView UI 与百度小程序的兼容问题</li>
+          <li>负责将移动端 H5 页面与小程序页面逐一匹配，便于百度进行引流</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 陈达 · 前端开发工程师 · 13003678592 · 1163485800@qq.com</p>
+</footer>
+
+<script>
+// Floating circles in hero
+(function() {
+  const container = document.getElementById('circles');
+  for (let i = 0; i < 15; i++) {
+    const c = document.createElement('div');
+    c.className = 'circle';
+    const size = Math.random() * 80 + 30;
+    c.style.width = size + 'px';
+    c.style.height = size + 'px';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.animationDuration = (Math.random() * 10 + 8) + 's';
+    c.style.animationDelay = (Math.random() * 8) + 's';
+    container.appendChild(c);
+  }
+})();
+
+// Scroll animations using IntersectionObserver
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in, .slide-left, .slide-right, .section-title').forEach(el => {
+    observer.observe(el);
+  });
+})();
+
+// Show/hide nav on scroll
+(function() {
+  const nav = document.getElementById('nav');
+  const hero = document.getElementById('hero');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > hero.offsetHeight * 0.6) {
+      nav.classList.add('show');
+    } else {
+      nav.classList.remove('show');
+    }
+  });
+})();
+
+// Smooth scroll for nav links
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
