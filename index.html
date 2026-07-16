@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <title>陈达 - 前端开发工程师</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -94,18 +95,19 @@ a { color: var(--primary); text-decoration: none; }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 .hero-avatar {
-  width: 140px;
-  height: 140px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
   margin: 0 auto 24px;
-  font-size: 56px;
-  color: #fff;
   box-shadow: 0 8px 40px rgba(46,117,182,0.35);
   animation: pulse 3s ease-in-out infinite;
+  overflow: hidden;
+  border: 4px solid rgba(255,255,255,0.6);
+}
+.hero-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 @keyframes pulse {
   0%, 100% { box-shadow: 0 8px 40px rgba(46,117,182,0.35); }
@@ -461,7 +463,7 @@ footer a { color: #fff; }
 <section class="hero" id="hero">
   <div class="hero-circles" id="circles"></div>
   <div class="hero-content">
-    <div class="hero-avatar">陈</div>
+    <div class="hero-avatar"><img src="assets/avatar.png" alt="陈达"></div>
     <h1 class="hero-name">陈达</h1>
     <p class="hero-title">前端开发工程师</p>
     <div class="hero-info">
